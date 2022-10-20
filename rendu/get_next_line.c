@@ -35,37 +35,29 @@ char	*string_append(t_string *s, char c)
 */
 
 #include "get_next_line.h"
-#include <assert.h>
 
-#define BUFFER_SIZE 12
-#define LINE_SIZE 1024
+#define BUFFER_SIZE 1
 
 char	*get_next_line(int fd)
 {
 	static char buffer[BUFFER_SIZE];
-	static unsigned int	i;
+	static int	i;
 	static int ret;
 	static int first_call = 1;
 
 	char			*line;
 	unsigned int	j;
+	unsigned int	max_line_size = BUFFER_SIZE;
 	
-	line = malloc(LINE_SIZE);
+	line = malloc(max_line_size);
 	j = 0;
 	if (first_call)
 	{
-		printf("first call\n");
 		ret = read(fd, buffer, BUFFER_SIZE);
 		first_call = 0;
 	}
-	else
-	{
-		printf("not first call\n");
-	}
 	while (ret)
 	{
-		//printf("ret: %d i: %i\n", ret, i);
-		//printf("buffer: %s\n", buffer);
 		while (i < ret)
 		{
 			line[j] = buffer[i];

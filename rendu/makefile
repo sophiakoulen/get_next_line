@@ -1,7 +1,19 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I. -L. -g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -I.
+SRC = get_next_line.c
+OBJS = get_next_line.o
+NAME = libgnl.a
 
-SRC = main.c get_next_line.c
+all: $(NAME)
 
-test: $(SRC)
-	gcc $(SRC) -o $@
+$(NAME): $(OBJS)
+	ar rc $@ $(OBJS)
+	ranlib $@
+
+clean:
+	rm -f $(OBJS)
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
