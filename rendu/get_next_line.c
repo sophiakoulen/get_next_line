@@ -74,5 +74,10 @@ char	*get_next_line(int fd)
 		i = 0;
 	}
 	line[j] = 0;
+	if (j == 0)
+	{
+		free(line);
+		return (0);
+	}
 	return (line);
 }

@@ -1,48 +1,67 @@
 #include "../tests.h"
 
-static char **lines3_actual(char *file_name)
+typedef struct s_entire_file
 {
-	char	**ret;
-	int		fd;
+	int		i;
+	char	**lines;
+} t_entire_file;
 
-	ret = malloc(3 * sizeof(char *));
+static t_entire_file get_file_actual(char *file_name)
+{
+	t_entire_file 	f;
+	int				fd;
+
+	f.lines = malloc(1024 * sizeof(char *));
+	f.i = 0;
 	fd = open(file_name, O_RDWR);
-	for(int i = 0; i < 3; i++)
-		ret[i] = get_next_line(fd);
-	close(fd);
-	return (ret);
-}
-
-static char **lines3_expected(char *file_name)
-{
-	char	**ret;
-	FILE	*f;
-	size_t	linecapp;
-
-	ret = calloc(3, sizeof(*ret));
-	f = fopen(file_name, "r");
-	for(int i = 0; i < 3; i++)
+	f.lines[f.i] = get_next_line(fd);
+	while (f.lines[f.i])
 	{
-		getline(&(ret[i]), &linecapp, f);
+		f.i++;
+		f.lines[f.i] = get_next_line(fd);
 	}
-	fclose(f);
-	(void)linecapp;
-	return (ret);
+	close(fd);
+	return (f);
 }
 
-void test_3lines(char *filename)
+static t_entire_file get_file_expected(char *file_name)
 {
-	char **actual;
-	char **expected;
+	t_entire_file	f;
+	FILE			*stream;
+	size_t			linecapp;
+	int				ret;
+
+	f.lines = calloc(1024, sizeof(char *));
+	f.i = 0;
+	stream = fopen(file_name, "r");
+	
+	ret = getline(&(f.lines[f.i]), &linecapp, stream);
+	while (ret != -1)
+	{
+		f.i++;
+		ret = getline(&(f.lines[f.i]), &linecapp, stream);
+	}
+	fclose(stream);
+	(void)linecapp;
+	return (f);
+}
+
+void test_entire_file(char *filename)
+{
+	t_entire_file actual;
+	t_entire_file expected;
 	int ret;
 
-	expected = lines3_expected(filename);
-	actual = lines3_actual(filename);
-	for(int i = 0; i < 3; i++)
+	expected = get_file_expected(filename);
+	actual = get_file_actual(filename);
+	if (expected.i != actual.i)
+		printf("number of lines read differ: expected: %d vs actual: %d\n", expected.i, actual.i);
+	assert(expected.i == actual.i);
+	for(int j = 0; j < expected.i; j++)
 	{
-		ret = strcmp(expected[i], actual[i]);
+		ret = strcmp(expected.lines[j], actual.lines[j]);
 		if (ret != 0)
-			printf("expected:%s\nactual:%s\n", expected[i], actual[i]);
+			printf("line #%i: difference.\nexpected:%s\nactual:%s\n", j, expected.lines[j], actual.lines[j]);
 		assert(ret == 0);
 	}
 	printf("OK\n");
@@ -52,6 +71,6 @@ int main(int argc, char **argv)
 {
 	char *file_name = argv[1];
 	printf("file: %s\n", file_name);
-	test_3lines(file_name);
+	test_entire_file(file_name);
 	return (0);
 }
