@@ -1,14 +1,12 @@
 #ifndef TESTS_H
 # define TESTS_H
 
-#include <CUnit/CUnit.h>
-#include <CUnit/Automated.h>
-#include <CUnit/Console.h>
-#include <CUnit/Basic.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <string.h>
+#include <assert.h>
 #include "get_next_line.h"
 
 void test_firstline_emptyfile(void);

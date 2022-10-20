@@ -37,6 +37,7 @@ char	*string_append(t_string *s, char c)
 #include "get_next_line.h"
 
 #define BUFFER_SIZE 1
+#define LINE_SIZE 1024
 
 char	*get_next_line(int fd)
 {
@@ -47,7 +48,7 @@ char	*get_next_line(int fd)
 
 	char			*line;
 	unsigned int	j;
-	unsigned int	max_line_size = BUFFER_SIZE;
+	unsigned int	max_line_size = LINE_SIZE;
 	
 	line = malloc(max_line_size);
 	j = 0;
