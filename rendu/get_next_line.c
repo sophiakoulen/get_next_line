@@ -1,79 +1,58 @@
-/*typedef	struct s_string
-{
-	size_t	index;
-	size_t	max_size;
-	char	*ptr;	
-}	t_string;
-
-#define INIT_SIZE 32
-
-char	*string_init(t_string *s)
-{
-	s->index = 0;
-	s->max_size = INIT_SIZE - 1;
-	s->ptr = malloc((max_size + 1) * sizeof(char));
-	return (s->ptr);
-}
-
-void	*ft_realloc(void *ptr, size_t size)
-{
-
-}
-
-char	*string_append(t_string *s, char c)
-{
-	if (s->index == s->max_size)
-	{
-		s->max_size = s->max_size * 2 + 1;
-		s->ptr = ft_realloc(s->ptr, (max_size + 1) * sizeof(char));
-	}
-	(s->ptr)[s->index] = c;
-	(s->ptr)[s->index + 1] = 0;
-	(s->index)++;
-}
-
-*/
-
 #include "get_next_line.h"
 
-#define BUFFER_SIZE 1
-#define LINE_SIZE 1024
+int		gnl_attempt_resize(char **ptr, unsigned int index)
+{
+	char	*tmp;
+
+	if (index >= (INIT_LINE_SIZE - 1) && gnl_ispow2(index + 1))
+	{
+		tmp = gnl_realloc(*ptr, 2 * (index + 1) * sizeof(char));
+		if (!tmp)
+		{
+			free(*ptr);
+			return (0);
+		}
+		*ptr = tmp;
+	}
+	return (1);
+}
+
+int		gnl_consume_buffer(t_stream *s, char **line, unsigned int *j, int fd)
+{
+	while (s->cursor < s->bytes_read)
+	{
+		(*line)[*j] = s->buffer[s->cursor];
+		(*line)[*j + 1] = 0;
+		s->cursor++;
+		if ((*line)[*j] == '\n')
+			return (1);
+		(*j)++;
+		if (!gnl_attempt_resize(line, (*j)))
+			return (0);
+	}
+	s->bytes_read = read(fd, s->buffer, BUFFER_SIZE);
+	s->cursor = 0;
+	return (1);
+}
 
 char	*get_next_line(int fd)
 {
-	static char buffer[BUFFER_SIZE];
-	static int	i;
-	static int ret;
-	static int first_call = 1;
-
+	static t_stream	s = {.cursor=0, .bytes_read=-42};
 	char			*line;
 	unsigned int	j;
-	unsigned int	max_line_size = LINE_SIZE;
-	
-	line = malloc(max_line_size);
+
+	line = malloc(INIT_LINE_SIZE);
+	if (!line)
+		return (0);
+
 	j = 0;
-	if (first_call)
+	while (s.bytes_read && s.bytes_read != -1)
 	{
-		ret = read(fd, buffer, BUFFER_SIZE);
-		first_call = 0;
+		if (!gnl_consume_buffer(&s, &line, &j, fd))
+			return (0);
+		if (line[j] == '\n')
+			return (line);
 	}
-	while (ret)
-	{
-		while (i < ret)
-		{
-			line[j] = buffer[i];
-			i++;
-			if (line[j] == '\n')
-			{
-				line[j + 1] = 0;
-				return (line);
-			}
-			j++;
-		}
-		ret = read(fd, buffer, BUFFER_SIZE);
-		i = 0;
-	}
-	line[j] = 0;
 	if (j == 0)
 	{
 		free(line);

@@ -1,11 +1,5 @@
 #include "../tests.h"
 
-typedef struct s_entire_file
-{
-	int		i;
-	char	**lines;
-} t_entire_file;
-
 static t_entire_file get_file_actual(char *file_name)
 {
 	t_entire_file 	f;
@@ -34,13 +28,14 @@ static t_entire_file get_file_expected(char *file_name)
 	f.lines = calloc(1024, sizeof(char *));
 	f.i = 0;
 	stream = fopen(file_name, "r");
-	
 	ret = getline(&(f.lines[f.i]), &linecapp, stream);
 	while (ret != -1)
 	{
 		f.i++;
 		ret = getline(&(f.lines[f.i]), &linecapp, stream);
 	}
+	free(f.lines[f.i]);
+	f.lines[f.i] = 0;
 	fclose(stream);
 	(void)linecapp;
 	return (f);
@@ -59,10 +54,18 @@ void test_entire_file(char *filename)
 	assert(expected.i == actual.i);
 	for(int j = 0; j < expected.i; j++)
 	{
-		ret = strcmp(expected.lines[j], actual.lines[j]);
-		if (ret != 0)
-			printf("line #%i: difference.\nexpected:%s\nactual:%s\n", j, expected.lines[j], actual.lines[j]);
-		assert(ret == 0);
+		if (!!expected.lines[j] != !!actual.lines[j])
+		{
+			printf("line #%d: expected: %s, actual: %s\n", j, expected.lines[j], actual.lines[j]);
+		}
+		assert(!!expected.lines[j] == !!actual.lines[j]);
+		if (expected.lines[j])
+		{
+			ret = strcmp(expected.lines[j], actual.lines[j]);
+			if (ret != 0)
+				printf("line #%i: difference.\nexpected:%s\nactual:%s\n", j, expected.lines[j], actual.lines[j]);
+			assert(ret == 0);
+		}
 	}
 	printf("OK\n");
 }

@@ -2,7 +2,7 @@
 #include <errno.h>
 #include <dlfcn.h>
 
-static int	malloc_fail_code = 1;
+static int	count = COUNT;
 
 void	*malloc(size_t size)
 {
@@ -13,23 +13,39 @@ void	*malloc(size_t size)
 		real_malloc = (void *(*)(size_t))dlsym(RTLD_NEXT, "malloc");
 	}
 
-	if (malloc_fail_code != 0)
+	if (count == 0)
 	{
-		errno = malloc_fail_code;
-		malloc_fail_code = 0;
 		return (NULL); 
 	}
-
-	return (real_malloc(size));
+	else
+	{
+		count--;
+		return (real_malloc(size));
+	}
 }
 
-int main()
+static t_entire_file get_file_actual(char *file_name)
 {
-	printf("overriding malloc\n");
-	char *line;
-	int fd = open("testcases/test.txt", O_RDWR);
-	line = get_next_line(fd);
+	t_entire_file 	f;
+	int				fd;
+
+	f.lines = calloc(1024, sizeof(char *));
+	f.i = 0;
+	fd = open(file_name, O_RDWR);
+	f.lines[f.i] = get_next_line(fd);
+	while (f.lines[f.i])
+	{
+		f.i++;
+		f.lines[f.i] = get_next_line(fd);
+	}
 	close(fd);
-	printf("%p", line);
+	return (f);
+}
+
+int main(int argc, char **argv)
+{
+	printf("file: %s\n", argv[1]);
+	get_file_actual(argv[1]);
+	printf("OK\n");
 	return (0);
 }

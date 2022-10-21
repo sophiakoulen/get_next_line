@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -I.
-SRC = get_next_line.c
-OBJS = get_next_line.o
+SRC = get_next_line.c get_next_line_utils.c
+OBJS = get_next_line.o get_next_line_utils.o
 NAME = libgnl.a
 
 all: $(NAME)
@@ -9,6 +9,11 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	ar rc $@ $(OBJS)
 	ranlib $@
+
+BUF_SIZE=7
+
+.c.o:
+	$(CC) $(CFLAGS) -c -D BUFFER_SIZE=$(BUF_SIZE) $?
 
 clean:
 	rm -f $(OBJS)

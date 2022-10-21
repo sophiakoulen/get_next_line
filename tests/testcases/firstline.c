@@ -13,16 +13,24 @@ static char *first_line_actual(char *file_name)
 
 static char *first_line_expected(char *file_name)
 {
-	char	*ret;
+	char	*line;
 	FILE	*f;
 	size_t	linecapp;
+	int 	ret;
 
 	f = fopen(file_name, "r");
-	ret = 0;
-	getline(&ret, &linecapp, f);
+	if (!f)
+		return (0);
+	line = 0;
+	ret = getline(&line, &linecapp, f);
+	if (ret == -1)
+	{
+		free(line);
+		return (0);
+	}
 	fclose(f);
 	(void)linecapp;
-	return (ret);
+	return (line);
 }
 
 void test_firstline(char *filename)
@@ -32,10 +40,19 @@ void test_firstline(char *filename)
 
 	expected = first_line_expected(filename);
 	actual = first_line_actual(filename);
-	int ret = strcmp(expected, actual);
-	if (ret != 0)
-		printf("actual: %sEND\nexpected: %sEND\n", actual, expected);
-	assert(ret == 0);
+	if (!!expected != !!actual)
+	{
+		printf("expected: %s", expected);
+		printf("actual: %s", actual);
+	}
+	assert(!!expected == !!actual);
+	if (expected)
+	{
+		int ret = strcmp(expected, actual);
+		if (ret != 0)
+			printf("actual: %s\nexpected: %s\n", actual, expected);
+		assert(ret == 0);
+	}
 	printf("OK\n");
 }
 

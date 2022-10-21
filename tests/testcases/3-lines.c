@@ -15,19 +15,25 @@ static char **lines3_actual(char *file_name)
 
 static char **lines3_expected(char *file_name)
 {
-	char	**ret;
+	char	**lines;
 	FILE	*f;
 	size_t	linecapp;
+	int		ret;
 
-	ret = calloc(3, sizeof(*ret));
+	lines = calloc(3, sizeof(*lines));
 	f = fopen(file_name, "r");
 	for(int i = 0; i < 3; i++)
 	{
-		getline(&(ret[i]), &linecapp, f);
+		ret = getline(&(lines[i]), &linecapp, f);
+		if (ret == -1)
+		{
+			free(lines[i]);
+			lines[i] = 0;
+		}
 	}
 	fclose(f);
 	(void)linecapp;
-	return (ret);
+	return (lines);
 }
 
 void test_3lines(char *filename)
@@ -40,10 +46,16 @@ void test_3lines(char *filename)
 	actual = lines3_actual(filename);
 	for(int i = 0; i < 3; i++)
 	{
-		ret = strcmp(expected[i], actual[i]);
-		if (ret != 0)
-			printf("expected:%s\nactual:%s\n", expected[i], actual[i]);
-		assert(ret == 0);
+		if (!!expected[i] != !!actual[i])
+			printf("line #%d: expected: %s, actual: %s", i, expected[i], actual[i]);
+		assert(!!expected[i] == !!actual[i]);
+		if (expected[i])
+		{
+			ret = strcmp(expected[i], actual[i]);
+			if (ret != 0)
+				printf("expected:%s\nactual:%s\n", expected[i], actual[i]);
+			assert(ret == 0);
+		}
 	}
 	printf("OK\n");
 }

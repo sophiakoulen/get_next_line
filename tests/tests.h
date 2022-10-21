@@ -9,6 +9,12 @@
 #include <assert.h>
 #include "get_next_line.h"
 
+typedef struct s_entire_file
+{
+	int		i;
+	char	**lines;
+} t_entire_file;
+
 void test_firstline_emptyfile(void);
 void test_firstline_helloworld(void);
 void test_firstline_multiline1(void);
