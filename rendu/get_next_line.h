@@ -15,8 +15,13 @@ typedef struct s_stream
 	char	buffer[BUFFER_SIZE];
 	int		cursor;
 	int		bytes_read;
-	int		first_call;
-} t_stream;
+}	t_stream;
+
+typedef	struct s_line
+{
+	char			*line;
+	unsigned int	index;
+}	t_line;
 
 int		gnl_ispow2(unsigned int n);
 void	gnl_memcpy(void *dst, const void *src, size_t n);

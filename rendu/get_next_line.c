@@ -1,62 +1,70 @@
 #include "get_next_line.h"
 
-int		gnl_attempt_resize(char **ptr, unsigned int index)
+void	gnl_resize_if_necessary(t_line *line, unsigned int count)
 {
-	char	*tmp;
+	size_t	occupied;
 
-	if (index >= (INIT_LINE_SIZE - 1) && gnl_ispow2(index + 1))
-	{
-		tmp = gnl_realloc(*ptr, 2 * (index + 1) * sizeof(char));
-		if (!tmp)
-		{
-			free(*ptr);
-			return (0);
-		}
-		*ptr = tmp;
-	}
-	return (1);
+	if (!line->line)
+		return ;
+	occupied = line->index + 1;
+	if (occupied + count > gnl_roundpow2(occupied))
+		gnl_resize_line(line, gnl_roundpow2(occupied + count));
 }
 
-int		gnl_consume_buffer(t_stream *s, char **line, unsigned int *j, int fd)
+void	gnl_init_if_necessary(t_line *line)
 {
-	while (s->cursor < s->bytes_read)
+	if (!line->line)
+		line->line = malloc(sizeof(char) * INIT_LINE_SIZE);
+}
+
+void	gnl_append_from_stream(t_line *line, t_stream s, unsigned int count)
+{
+	if (!line->line)
+		return ;
+	i = 0;
+	while (i < count)
 	{
-		(*line)[*j] = s->buffer[s->cursor];
-		(*line)[*j + 1] = 0;
-		s->cursor++;
-		if ((*line)[*j] == '\n')
-			return (1);
-		(*j)++;
-		if (!gnl_attempt_resize(line, (*j)))
-			return (0);
+		line->line[line->index + i] = s.buffer[s.cursor + i];
+		i++;
 	}
-	s->bytes_read = read(fd, s->buffer, BUFFER_SIZE);
-	s->cursor = 0;
-	return (1);
+	line->index += count;
+}
+
+int	gnl_is_eol(t_line line)
+{
+	if (!line.line)
+		return (1);
+	assert(line.index > 0); //ATTENTION FORBIDDEN
+	return (line.index > 0 && line.line[index - 1] == '\n');
+}
+
+unsigned int	gnl_chunk_size(t_stream *s)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (s.buffer[s.cursor + i] != '\n' && i < (s.bytes_read - s.cursor))
+		i++;
+	return (i);
 }
 
 char	*get_next_line(int fd)
 {
 	static t_stream	s = {.cursor=0, .bytes_read=-42};
-	char			*line;
-	unsigned int	j;
+	t_line			line;
+	unsigned int	count;
 
-	line = malloc(INIT_LINE_SIZE);
-	if (!line)
-		return (0);
-
-	j = 0;
+	line.line = 0;
+	line.index = 0;
 	while (s.bytes_read && s.bytes_read != -1)
 	{
-		if (!gnl_consume_buffer(&s, &line, &j, fd))
-			return (0);
-		if (line[j] == '\n')
-			return (line);
-	}
-	if (j == 0)
-	{
-		free(line);
-		return (0);
+		count = gnl_chunk_size(s);
+		gnl_init_if_necessary(&line);
+		gnl_resize_if_necessary(&line, count);
+		gnl_append_from_stream(line, s, count);
+		if (gnl_is_eol(line))
+			break ;
+		s.bytes_read = read(fd, s->buffer, BUFFER_SIZE);
 	}
 	return (line);
 }
