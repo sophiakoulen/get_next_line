@@ -3,12 +3,33 @@
 
 void	test_append_from_stream(void)
 {
+	/* conditions on using this function 
+
+		the line must have enough space available for count
+		characters. That means the allocated memory must be >= 
+		count + line.index + 1;
+
+		the stream must have at least stream.bytes_read bytes allocated
+		the cursor must be >= 0 and < stream.bytes_read
+		cursor + count must be <= stream.bytes_read 
+		stream.buffer needn't be nul-terminated
+	*/
+
 	t_line			line;
 	t_stream		s;
 	unsigned int	count;
+	unsigned int	allocated_for_line;
+	unsigned int	allocated_for_stream;
 
-	line.line = "AAAAAAAAAAAAAAAA";
-	line.index = 0;
+	for()
+	{
+		assert(allocated_for_line >= count + line.index + 1);
+		assert(line.index >= 0);
+		
+		assert(allocated_for_stream >= s.bytes_read);
+		assert(s.cursor >= 0 && s.cursor < s.bytes_read);
+		assert(s.cursor + count <= s.bytes_read);
+	}
 
 	char str[BUFFER_SIZE] = 
 

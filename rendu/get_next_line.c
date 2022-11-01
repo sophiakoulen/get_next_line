@@ -26,7 +26,6 @@ void	gnl_append_from_stream(t_line *line, t_stream *s, unsigned int count)
 	while (i < count)
 	{
 		line->line[line->index + i] = s->buffer[s->cursor + i];
-		printf("OK\n");
 		i++;
 	}
 	line->line[i] = 0;
@@ -34,7 +33,7 @@ void	gnl_append_from_stream(t_line *line, t_stream *s, unsigned int count)
 	s->cursor += count;
 }
 
-int	gnl_is_eol(t_line line)
+int		gnl_is_eol(t_line line)
 {
 	if (!line.line)
 		return (1);
