@@ -10,7 +10,7 @@ $(NAME): $(OBJS)
 	ar rc $@ $(OBJS)
 	ranlib $@
 
-BUF_SIZE=7
+BUF_SIZE=25
 
 .c.o:
 	$(CC) $(CFLAGS) -c -D BUFFER_SIZE=$(BUF_SIZE) $?

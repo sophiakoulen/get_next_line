@@ -5,9 +5,11 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <assert.h>
+
 #ifndef BUFFER_SIZE
 #	define BUFFER_SIZE 1
 #endif
+
 #define INIT_LINE_SIZE 32
 
 typedef struct s_stream

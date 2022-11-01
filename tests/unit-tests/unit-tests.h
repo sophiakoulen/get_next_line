@@ -12,5 +12,6 @@ void	test_roundpow2(void);
 void	test_strncpy(void);
 void	test_resize_line(void);
 void	test_resize_if_necessary(void);
-
+void	test_init_if_necessary(void);
+void	test_append_from_stream(void);
 #endif
