@@ -23,11 +23,17 @@ typedef	struct s_line
 	unsigned int	index;
 }	t_line;
 
-int		gnl_ispow2(unsigned int n);
-void	gnl_memcpy(void *dst, const void *src, size_t n);
-void	*gnl_realloc(void *ptr, size_t s);
-int		gnl_attempt_resize(char **ptr, unsigned int index);
 
-char	*get_next_line(int fd);
+uint32_t	gnl_roundpow2(uint32_t n);
+void		gnl_strncpy(char *dst, char *src, size_t n);
+__attribute__((weak)) void		gnl_resize_line(t_line *line, size_t new_size);
+
+void		gnl_resize_if_necessary(t_line *line, unsigned int count);
+void		gnl_init_if_necessary(t_line *line, size_t count);
+void		gnl_append_from_stream(t_line *line, t_stream *s, unsigned int count);
+int			gnl_is_eol(t_line line);
+unsigned int	gnl_chunk_size(t_stream s);
+
+char		*get_next_line(int fd);
 
 #endif

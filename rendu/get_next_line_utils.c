@@ -7,6 +7,12 @@
 
 uint32_t	gnl_roundpow2(uint32_t n)
 {
+	/*
+		if n < 32, returns 32
+		else
+			if n is a pow 2, return n
+			else, return nextpow2
+	*/
 	if (n < INIT_LINE_SIZE)
 		return (INIT_LINE_SIZE);
 	n--;
@@ -46,11 +52,12 @@ void	gnl_strncpy(char *dst, char *src, size_t n)
 	return (new_ptr);
 }*/
 
-void	gnl_resize_line(t_line *line, size_t new_size)
+__attribute__((weak)) void	gnl_resize_line(t_line *line, size_t new_size)
 {
 	char	*tmp;
 
-	tmp = malloc(sizeof(*tmp) * 2 * new_size);
+	printf("not overwritten\n");
+	tmp = malloc(sizeof(*tmp) * new_size);
 	if (!tmp)
 		free(line->line);
 	else
@@ -58,5 +65,5 @@ void	gnl_resize_line(t_line *line, size_t new_size)
 		gnl_strncpy(tmp, line->line, new_size);
 		free(line->line);
 	}
-	*line = tmp;
+	line->line = tmp;
 }

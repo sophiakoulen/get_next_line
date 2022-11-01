@@ -11,23 +11,26 @@ void	gnl_resize_if_necessary(t_line *line, unsigned int count)
 		gnl_resize_line(line, gnl_roundpow2(occupied + count));
 }
 
-void	gnl_init_if_necessary(t_line *line)
+void	gnl_init_if_necessary(t_line *line, size_t count)
 {
-	if (!line->line)
+	if (!line->line && count > 0)
 		line->line = malloc(sizeof(char) * INIT_LINE_SIZE);
 }
 
-void	gnl_append_from_stream(t_line *line, t_stream s, unsigned int count)
+void	gnl_append_from_stream(t_line *line, t_stream *s, unsigned int count)
 {
+	unsigned int	i;
 	if (!line->line)
 		return ;
 	i = 0;
 	while (i < count)
 	{
-		line->line[line->index + i] = s.buffer[s.cursor + i];
+		line->line[line->index + i] = s->buffer[s->cursor + i];
 		i++;
 	}
+	line->line[i] = 0;
 	line->index += count;
+	s->cursor += count;
 }
 
 int	gnl_is_eol(t_line line)
@@ -35,17 +38,17 @@ int	gnl_is_eol(t_line line)
 	if (!line.line)
 		return (1);
 	assert(line.index > 0); //ATTENTION FORBIDDEN
-	return (line.index > 0 && line.line[index - 1] == '\n');
+	return (line.index > 0 && line.line[line.index - 1] == '\n');
 }
 
-unsigned int	gnl_chunk_size(t_stream *s)
+unsigned int	gnl_chunk_size(t_stream s)
 {
-	unsigned int	i;
+	int	i;
 
 	i = 0;
 	while (s.buffer[s.cursor + i] != '\n' && i < (s.bytes_read - s.cursor))
 		i++;
-	return (i);
+	return ((unsigned int)i);
 }
 
 char	*get_next_line(int fd)
@@ -59,12 +62,12 @@ char	*get_next_line(int fd)
 	while (s.bytes_read && s.bytes_read != -1)
 	{
 		count = gnl_chunk_size(s);
-		gnl_init_if_necessary(&line);
+		gnl_init_if_necessary(&line, count);
 		gnl_resize_if_necessary(&line, count);
-		gnl_append_from_stream(line, s, count);
+		gnl_append_from_stream(&line, &s, count);
 		if (gnl_is_eol(line))
 			break ;
-		s.bytes_read = read(fd, s->buffer, BUFFER_SIZE);
+		s.bytes_read = read(fd, s.buffer, BUFFER_SIZE);
 	}
-	return (line);
+	return (line.line);
 }
