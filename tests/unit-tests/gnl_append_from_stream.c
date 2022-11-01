@@ -10,7 +10,9 @@ void	test_append_from_stream(void)
 	line.line = "AAAAAAAAAAAAAAAA";
 	line.index = 0;
 
-	
+	char str[BUFFER_SIZE] = 
+
+	s.buffer = 
 	s.bytes_read = 5;
 	s.cursor = 0;
 
