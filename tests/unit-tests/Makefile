@@ -1,9 +1,9 @@
 CC=gcc
-CFLAGS= -Wall -Wextra -Werror -I../../rendu -L../../rendu
+CFLAGS= -Wall -Wextra -Werror -I../../src -L../../src
 
 SRC= main.c gnl_roundpow2.c gnl_strncpy.c gnl_resize_line.c \
 gnl_resize_if_necessary.c gnl_init_if_necessary.c \
-gnl_append_from_stream.c
+gnl_append_from_stream.c gnl_is_eol.c gnl_chunk_size.c
 OBJ=$(SRC:.c=.o)
 
 BUF_SIZE =25

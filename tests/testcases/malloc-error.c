@@ -46,6 +46,6 @@ int main(int argc, char **argv)
 {
 	printf("file: %s\n", argv[1]);
 	get_file_actual(argv[1]);
-	printf("OK\n");
+	printf("BUFFER_SIZE: %d\n", BUFFER_SIZE);
 	return (0);
 }

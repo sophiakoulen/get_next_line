@@ -8,6 +8,7 @@ static t_entire_file get_file_actual(char *file_name)
 	f.lines = malloc(1024 * sizeof(char *));
 	f.i = 0;
 	fd = open(file_name, O_RDWR);
+	assert(fd != -1);
 	f.lines[f.i] = get_next_line(fd);
 	while (f.lines[f.i])
 	{
@@ -67,13 +68,13 @@ void test_entire_file(char *filename)
 			assert(ret == 0);
 		}
 	}
-	printf("OK\n");
 }
 
 int main(int argc, char **argv)
 {
 	char *file_name = argv[1];
 	printf("file: %s\n", file_name);
+	printf("BUFFER_SIZE: %d\n", BUFFER_SIZE);
 	test_entire_file(file_name);
 	return (0);
 }

@@ -4,12 +4,12 @@
 int		g_resized;
 size_t	g_new_size;
 
-void	gnl_resize_line(t_line *line, size_t new_size)
+/*void	gnl_resize_line(t_line *line, size_t new_size)
 {
 	(void)line;
 	g_new_size = new_size;
 	g_resized = 1;
-}
+}*/
 
 static unsigned int get_capacity(t_line line)
 {

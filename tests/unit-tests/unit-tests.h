@@ -14,4 +14,7 @@ void	test_resize_line(void);
 void	test_resize_if_necessary(void);
 void	test_init_if_necessary(void);
 void	test_append_from_stream(void);
+void	test_is_eol(void);
+void	test_chunk_size(void);
+
 #endif

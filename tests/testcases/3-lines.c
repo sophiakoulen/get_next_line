@@ -57,13 +57,13 @@ void test_3lines(char *filename)
 			assert(ret == 0);
 		}
 	}
-	printf("OK\n");
 }
 
 int main(int argc, char **argv)
 {
 	char *file_name = argv[1];
 	printf("file: %s\n", file_name);
+	printf("BUFFER_SIZE: %d\n", BUFFER_SIZE);
 	test_3lines(file_name);
 	return (0);
 }

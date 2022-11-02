@@ -53,13 +53,13 @@ void test_firstline(char *filename)
 			printf("actual: %s\nexpected: %s\n", actual, expected);
 		assert(ret == 0);
 	}
-	printf("OK\n");
 }
 
 int main(int argc, char **argv)
 {
 	char *file_name = argv[1];
 	printf("file: %s\n", file_name);
+	printf("BUFFER_SIZE: %d\n", BUFFER_SIZE);
 	test_firstline(file_name);
 	return (0);
 }

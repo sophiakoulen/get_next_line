@@ -7,6 +7,8 @@ int main(void)
 	//test_resize_line();
 	//test_resize_if_necessary();
 	//test_init_if_necessary();
-	test_append_from_stream();
+	//test_append_from_stream();
+	//test_is_eol();
+	test_chunk_size();
 	return (0);
 }

@@ -6,30 +6,17 @@
 /*   By: skoulen <skoulen@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:46:53 by skoulen           #+#    #+#             */
-/*   Updated: 2022/11/02 19:54:19 by skoulen          ###   ########.fr       */
+/*   Updated: 2022/11/02 19:28:40 by skoulen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 /*
-	This function uses a bitwise trick to compute
-	the next power of 2 of n is not a power of 2
-
-	if n < 32 
-		returns 32
+	if n < 32, returns 32
 	else
-		if n is a pow 2
-			return n
-		else 
-			return nextpow2
-	
-	This function actually computes the next power of 2
-	starting at INIT_LINE_SIZE.
-	(INIT_LINE_SIZE is a power of 2)
-	This is because it is used by gnl_resize_if_necessary() to
-	find out how much capacity the line has, and the 
-	minimum capacity is INIT_LINE_SIZE
+		if n is a pow 2, return n
+		else, return nextpow2
 */
 uint32_t	gnl_roundpow2(uint32_t n)
 {
@@ -72,15 +59,6 @@ void	gnl_resize_line(t_line *line, uint32_t new_size)
 	line->line = tmp;
 }
 
-/*
-	This function takes as a parameter the line structure and
-	the number of bytes we wish to append to our line.
-	CAREFUL! This function uses line->index to deduce the
-	allocated memory.
-	Because we allocate memory in powers of 2, if we compute
-	the next power of 2 of our index + 1 (because we need space for
-	nul-termination)
-*/
 void	gnl_resize_if_necessary(t_line *line, uint32_t count)
 {
 	uint32_t	occupied;
