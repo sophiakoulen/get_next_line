@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS= -Wall -Wextra -Werror -I../src -L../src -g3 -fsanitize=address
+CFLAGS= -Wall -Wextra -I../src -L../src -g3 -fsanitize=address
 
 FILES= files/emptyfile.txt files/hello-world.txt files/diff-lengths.txt \
 files/multi-line-1.txt files/multi-line-2.txt files/multi-newline.txt \
@@ -19,7 +19,7 @@ get_next_line_utils.c:
 
 # testing reading 1 line
 firstline: testcases/firstline.c $(GNL_FILES)
-	$(CC) $(CFLAGS) $? -D BUFFER_SIZE=10 -o $@
+	$(CC) $(CFLAGS) $? -D BUFFER_SIZE=1 -o $@
 
 tests-firstline: $(FILES) firstline
 	echo "\ntesting reading 1 line\n"
