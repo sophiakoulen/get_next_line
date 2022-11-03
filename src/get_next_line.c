@@ -6,7 +6,7 @@
 /*   By: skoulen <skoulen@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:46:50 by skoulen           #+#    #+#             */
-/*   Updated: 2022/11/03 10:48:16 by skoulen          ###   ########.fr       */
+/*   Updated: 2022/11/03 12:40:21 by skoulen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ char	*get_next_line(int fd)
 		count = gnl_chunk_size(s);
 		if (count)
 		{
-			gnl_init_if_necessary(&line, count);
+			gnl_init_if_necessary(&line);
 			gnl_resize_if_necessary(&line, count);
 			gnl_append_from_stream(&line, &s, count);
 			if (gnl_is_eol(line))

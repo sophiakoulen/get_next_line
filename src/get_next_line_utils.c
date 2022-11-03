@@ -6,7 +6,7 @@
 /*   By: skoulen <skoulen@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:46:53 by skoulen           #+#    #+#             */
-/*   Updated: 2022/11/03 10:47:35 by skoulen          ###   ########.fr       */
+/*   Updated: 2022/11/03 12:40:12 by skoulen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,9 @@ void	gnl_resize_if_necessary(t_line *line, uint32_t count)
 		gnl_resize_line(line, gnl_roundpow2(occupied + count));
 }
 
-void	gnl_init_if_necessary(t_line *line, uint32_t count)
+void	gnl_init_if_necessary(t_line *line)
 {
-	if (!line->line && count > 0)
+	if (!line->line)
 	{
 		line->line = malloc(sizeof(char) * INIT_LINE_SIZE);
 		line->index = 0;

@@ -6,7 +6,7 @@
 /*   By: skoulen <skoulen@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:46:46 by skoulen           #+#    #+#             */
-/*   Updated: 2022/11/03 10:30:42 by skoulen          ###   ########.fr       */
+/*   Updated: 2022/11/03 12:40:34 by skoulen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void			gnl_strncpy(char *dst, char *src, uint32_t n);
 void			gnl_resize_line(t_line *line, uint32_t new_size);
 
 void			gnl_resize_if_necessary(t_line *line, uint32_t count);
-void			gnl_init_if_necessary(t_line *line, uint32_t count);
+void			gnl_init_if_necessary(t_line *line);
 void			gnl_append_from_stream(t_line *line,
 					t_stream *s, uint32_t count);
 int				gnl_is_eol(t_line line);
