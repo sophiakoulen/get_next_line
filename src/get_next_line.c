@@ -6,7 +6,7 @@
 /*   By: skoulen <skoulen@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 14:46:50 by skoulen           #+#    #+#             */
-/*   Updated: 2022/11/02 19:40:33 by skoulen          ###   ########.fr       */
+/*   Updated: 2022/11/03 10:48:16 by skoulen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,34 @@ uint32_t	gnl_chunk_size(t_stream s)
 	return ((uint32_t)i);
 }
 
+/*
+	Synopsis of get_next_line:
+	----------------------------------
+	line.line is initialized to (null).
+	while (we haven't met the EOF)
+	{
+		we first look if there are characters left in our
+		static buffer.
+		If yes,
+	 		we make sure our line structure is
+			prepared to receive the extra characters and
+			then we append them.
+			if we have are at the end of line,
+			we are finished and break.
+		Now, we refill our buffer.
+	}
+	When EOF is reached, we reset the buffer.
+	Return line.line
+	------------------------------------
+
+	About malloc failures:
+	Malloc failures do not result to an immediate break
+	out of the function.
+	Instead, line.line is just set to (null) and the
+	next functions that receive it just don't do anything.
+	My gnl_is_eol() function detects (null) as being an end
+	of line and makes it break out of our loop.
+*/
 char	*get_next_line(int fd)
 {
 	static t_stream	s = {.cursor = 0, .bytes_read = -42};
@@ -59,7 +87,6 @@ char	*get_next_line(int fd)
 	uint32_t		count;
 
 	line.line = 0;
-	line.index = 0;
 	while (s.bytes_read && s.bytes_read != -1)
 	{
 		count = gnl_chunk_size(s);
